@@ -1,0 +1,23 @@
+General Management Features
+ 
+1. Banner(Model), banners(table), BannerController(Controller)
+2. BannerText(Model), banner_texts(table), BannerTextController(Controller)
+3. BannerAds(Model), banners_ads(table), BannerAdsController(Controller)
+4. Promotion(Model), promotions(table), PromotionController(Controller)
+
+5. Contact 
+(1) ContactType(Model), contact_types(table)
+(2) Contact(Model), contacts(table), ContactController(Controller)
+
+6. Banking 
+(1) PaymentType(Models), payment_types(table), PaymentTypeController(Controller)
+(2) Bank(Model), banks(table), BankController(Controller)
+
+APIs 
+1. Banner API
+2. BannerText API
+3. BannerAds API
+4. Promotion API
+5. Contact API
+6. Banking API
+7. User API (Profile, Update Profile Image, Change Password)
