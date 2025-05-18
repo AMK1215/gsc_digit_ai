@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         //Commands\PullReport::class,
         // Commands\ArchiveOldWagers::class,
         // Commands\DeleteOldWagerBackups::class,
-        Commands\TriggerGameSpin::class
+        //Commands\TriggerGameSpin::class
     ];
 
     /**
