@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\App;
+use App\Console\Commands\TriggerGameSpin; // Ensure this import is present
 
 class Kernel extends ConsoleKernel
 {
@@ -14,10 +15,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //Commands\PullReport::class,
+        // Commands\PullReport::class,
         // Commands\ArchiveOldWagers::class,
         // Commands\DeleteOldWagerBackups::class,
-        //Commands\TriggerGameSpin::class
+        Commands\TriggerGameSpin::class // <-- Uncommented this line
     ];
 
     /**
@@ -38,19 +39,13 @@ class Kernel extends ConsoleKernel
 
         // Schedule checks for other durations - the command/job logic needs to handle
         // determining if a period for that duration has just completed.
-        // A simpler approach might be one job that checks all durations.
-        // Or separate jobs if their logic is very different.
+        // Running every minute and checking the period inside the command is often the simplest approach.
 
-        // Example for a single job checking all durations:
-        // $schedule->job(new ProcessGameRounds)->everyMinute();
-
-         // Let's assume you have one command that handles triggering spins for all durations
-         // based on the current time and period numbers.
-         //$schedule->command('game:trigger-spins')->everyMinute(); // Example command name
          $schedule->command(TriggerGameSpin::class, ['duration' => 1])->everyMinute();
          $schedule->command(TriggerGameSpin::class, ['duration' => 3])->everyMinute();
          $schedule->command(TriggerGameSpin::class, ['duration' => 5])->everyMinute();
          $schedule->command(TriggerGameSpin::class, ['duration' => 10])->everyMinute();
+
         // If you have separate commands per duration and need precise timing:
         // This requires careful logic to ensure they only run when their specific period ends.
         // $schedule->command(TriggerGameSpin::class, ['duration' => 1])->everyMinute();
