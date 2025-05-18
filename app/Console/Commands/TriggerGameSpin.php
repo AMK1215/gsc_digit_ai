@@ -8,7 +8,6 @@ use App\Models\AiGameResult; // Import the GameResult model
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon; // For date/time calculations
 
-
 class TriggerGameSpin extends Command
 {
     /**

@@ -37,10 +37,10 @@ class Kernel extends ConsoleKernel
         // Schedule the TriggerGameSpin command for each duration.
         // Correct syntax: command name first, then array of arguments.
 
-         $schedule->command('game:trigger-spin', ['duration' => 1])->everyMinute();
-         $schedule->command('game:trigger-spin', ['duration' => 3])->everyMinute();
-         $schedule->command('game:trigger-spin', ['duration' => 5])->everyMinute();
-         $schedule->command('game:trigger-spin', ['duration' => 10])->everyMinute();
+         $schedule->command('game:trigger-spin')->everyMinute();
+         //$schedule->command('game:trigger-spin', ['duration' => 3])->everyMinute();
+         //$schedule->command('game:trigger-spin', ['duration' => 5])->everyMinute();
+         //$schedule->command('game:trigger-spin', ['duration' => 10])->everyMinute();
 
         // If you have separate commands per duration and need precise timing:
         // This requires careful logic to ensure they only run when their specific period ends.
