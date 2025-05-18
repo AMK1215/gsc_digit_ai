@@ -33,18 +33,14 @@ class Kernel extends ConsoleKernel
         //$schedule->command('make:pull-report')->everyFiveSeconds();
         // $schedule->command('archive:old-wagers')->everyThirtyMinutes();
         // $schedule->command('wagers:delete-old-backups')->cron('*/45 * * * *');
-        // Schedule the command to run every minute for the 1-minute game
-        // The command itself will check if a 1-minute period just ended
-        //$schedule->command(TriggerGameSpin::class, ['duration' => 1])->everyMinute();
 
-        // Schedule checks for other durations - the command/job logic needs to handle
-        // determining if a period for that duration has just completed.
-        // Running every minute and checking the period inside the command is often the simplest approach.
+        // Schedule the TriggerGameSpin command for each duration.
+        // Correct syntax: command name first, then array of arguments.
 
-         $schedule->command(TriggerGameSpin::class, ['duration' => 1])->everyMinute();
-         $schedule->command(TriggerGameSpin::class, ['duration' => 3])->everyMinute();
-         $schedule->command(TriggerGameSpin::class, ['duration' => 5])->everyMinute();
-         $schedule->command(TriggerGameSpin::class, ['duration' => 10])->everyMinute();
+         $schedule->command('game:trigger-spin', ['duration' => 1])->everyMinute();
+         $schedule->command('game:trigger-spin', ['duration' => 3])->everyMinute();
+         $schedule->command('game:trigger-spin', ['duration' => 5])->everyMinute();
+         $schedule->command('game:trigger-spin', ['duration' => 10])->everyMinute();
 
         // If you have separate commands per duration and need precise timing:
         // This requires careful logic to ensure they only run when their specific period ends.
