@@ -1,6 +1,10 @@
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
+from typing import Literal
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 
+# ---------------- Core Classes ---------------- #
 class DigitGame:
     def __init__(self):
         self.current_digit = None
@@ -48,61 +52,52 @@ class GameInterface:
     def place_bet(self, bet_type, prediction, amount):
         result = self.game.spin()
         self.ai.add_result(result)
-        color = self.game.get_color(result)  # Moved color definition here
+        color = self.game.get_color(result)
 
         if bet_type == "digit":
             win = (result == prediction)
             payout = amount * 9
-        else:  # Color bet
+        else:
             win = (color == prediction)
             payout = amount * 2
 
         if win:
             self.balance += payout
-            return f"🎉 WIN! Result: {result} ({color}). Balance: {self.balance}"
-        self.balance -= amount
-        return f"❌ LOST. Result: {result} ({color}). Balance: {self.balance}"
+            return {"result": result, "color": color, "win": True, "balance": self.balance}
+        else:
+            self.balance -= amount
+            return {"result": result, "color": color, "win": False, "balance": self.balance}
 
     def ai_suggestion(self):
-        if len(self.ai.history) >= 5:  # Reduced threshold to 5 spins
+        if len(self.ai.history) >= 5:
             next_digit = self.ai.predict_next()
             color = self.game.get_color(next_digit)
-            return f"🤖 AI suggests: Bet on {next_digit} ({color})"
-        return "AI needs more data (spin 5+ times)."
+            return {"digit": next_digit, "color": color}
+        return {"message": "AI needs more data (spin 5+ times)."}
 
-def main():
-    game = GameInterface()
-    print("🎲 DIGIT PREDICTION GAME (0-9)")
-    print("💰 Starting balance: 1000")
+# ---------------- FastAPI Integration ---------------- #
 
-    while game.balance > 0:
-        print("\n1. Bet on Digit | 2. Bet on Color | 3. AI Suggestion | 4. Quit")
-        choice = input("Choose: ").strip()
+app = FastAPI()
+game = GameInterface()
 
-        if choice == "4":
-            break
-        elif choice == "3":
-            print(game.ai_suggestion())
-            continue
+class BetRequest(BaseModel):
+    bet_type: Literal["digit", "color"]
+    prediction: int | str
+    amount: int
 
-        try:
-            amount = int(input("💰 Bet amount: "))
-            if amount > game.balance:
-                print("❌ Not enough balance!")
-                continue
+@app.get("/")
+def root():
+    return {"message": "🎲 Welcome to the Digit Prediction Game API!"}
 
-            if choice == "1":
-                digit = int(input("🔢 Digit (0-9): "))
-                print(game.place_bet("digit", digit, amount))
-            elif choice == "2":
-                color = input("🎨 Color (Red/Blue/Green): ").capitalize()
-                print(game.place_bet("color", color, amount))
-            else:
-                print("❌ Invalid choice!")
-        except ValueError:
-            print("❌ Invalid input!")
+@app.post("/bet")
+def place_bet(bet: BetRequest):
+    result = game.place_bet(bet.bet_type, bet.prediction, bet.amount)
+    return result
 
-    print(f"🏁 Game over! Final balance: {game.balance}")
+@app.get("/ai_suggestion")
+def ai_tip():
+    return game.ai_suggestion()
 
-if __name__ == "__main__":
-    main()
+@app.get("/balance")
+def check_balance():
+    return {"balance": game.balance}
