@@ -15,7 +15,7 @@ class TriggerGameSpin extends Command
      *
      * The {duration} argument will specify the game duration (1, 3, 5, 10).
      */
-    protected $signature = 'game:trigger-spin {duration : The game duration in minutes (1, 3, 5, 10)}';
+    protected $signature = 'game:trigger-spin';
 
     /**
      * The console command description.
